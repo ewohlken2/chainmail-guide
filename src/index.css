@@ -1,0 +1,258 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  background: #1a1a2e;
+  color: #eee;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.header {
+  padding: 1rem 2rem;
+  background: #16213e;
+  border-bottom: 1px solid #0f3460;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.header h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #e94560;
+}
+
+.main-content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.scene-container {
+  flex: 1;
+  position: relative;
+}
+
+.sidebar {
+  width: 350px;
+  background: #16213e;
+  border-left: 1px solid #0f3460;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.weave-info {
+  padding: 1.5rem;
+  border-bottom: 1px solid #0f3460;
+}
+
+.weave-info h2 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: #e94560;
+}
+
+.weave-info .difficulty {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.weave-info .difficulty.beginner {
+  background: #2d6a4f;
+  color: #95d5b2;
+}
+
+.weave-info .difficulty.intermediate {
+  background: #5c4d7d;
+  color: #c8b6ff;
+}
+
+.weave-info .difficulty.advanced {
+  background: #9d4edd;
+  color: #e0aaff;
+}
+
+.weave-info p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #aaa;
+}
+
+.step-panel {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.step-panel h3 {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.step-panel .step-title {
+  font-size: 1.125rem;
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+.step-panel .step-description {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #ccc;
+  margin-bottom: 1rem;
+}
+
+.step-panel .tips {
+  background: #0f3460;
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.step-panel .tips h4 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #e94560;
+  margin-bottom: 0.5rem;
+}
+
+.step-panel .tips ul {
+  list-style: none;
+  padding: 0;
+}
+
+.step-panel .tips li {
+  font-size: 0.85rem;
+  color: #aaa;
+  padding: 0.25rem 0;
+  padding-left: 1rem;
+  position: relative;
+}
+
+.step-panel .tips li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: #e94560;
+}
+
+.controls-bar {
+  padding: 1rem 1.5rem;
+  background: #0f3460;
+  border-top: 1px solid #16213e;
+}
+
+.playback-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.playback-controls button {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: #16213e;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.playback-controls button:hover {
+  background: #1a2a4e;
+}
+
+.playback-controls button:active {
+  transform: scale(0.95);
+}
+
+.playback-controls button.primary {
+  width: 50px;
+  height: 50px;
+  background: #e94560;
+}
+
+.playback-controls button.primary:hover {
+  background: #ff6b6b;
+}
+
+.playback-controls button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.step-indicator {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.step-indicator .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #16213e;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.step-indicator .dot:hover {
+  transform: scale(1.2);
+}
+
+.step-indicator .dot.active {
+  background: #e94560;
+}
+
+.step-indicator .dot.completed {
+  background: #4ecdc4;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #666;
+  font-size: 1.25rem;
+}
+
+.error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #e94560;
+  font-size: 1rem;
+  padding: 2rem;
+  text-align: center;
+}

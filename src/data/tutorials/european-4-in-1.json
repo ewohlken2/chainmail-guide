@@ -1,0 +1,126 @@
+{
+  "version": "1.0.0",
+  "metadata": {
+    "id": "european-4-in-1",
+    "name": "European 4-in-1",
+    "alternateNames": ["Euro 4-1", "Classic Mail"],
+    "difficulty": "beginner",
+    "description": "The most common chainmail weave, dating back over 2000 years. Each ring connects to exactly 4 others, creating a flexible mesh pattern.",
+    "history": "Used extensively in medieval European armor, this weave provided excellent protection while maintaining flexibility.",
+    "aspectRatio": {
+      "minimum": 3.0,
+      "recommended": 4.0,
+      "maximum": 5.5
+    },
+    "tags": ["armor", "beginner", "classic", "sheet"]
+  },
+  "defaultCamera": {
+    "position": [0, 3, 6],
+    "target": [0, 0, 0],
+    "fov": 50
+  },
+  "scale": 1.0,
+  "rings": [
+    {
+      "id": "ring-1",
+      "position": [0, 0, 0],
+      "rotation": [1.5708, 0, 0],
+      "innerDiameter": 0.6,
+      "outerDiameter": 0.8,
+      "wireGauge": 0.1,
+      "colorRole": "seed"
+    },
+    {
+      "id": "ring-2",
+      "position": [0.35, 0.18, 0.15],
+      "rotation": [1.5708, 0, 0.7854],
+      "innerDiameter": 0.6,
+      "outerDiameter": 0.8,
+      "wireGauge": 0.1,
+      "colorRole": "connector"
+    },
+    {
+      "id": "ring-3",
+      "position": [-0.35, 0.18, 0.15],
+      "rotation": [1.5708, 0, -0.7854],
+      "innerDiameter": 0.6,
+      "outerDiameter": 0.8,
+      "wireGauge": 0.1,
+      "colorRole": "connector"
+    },
+    {
+      "id": "ring-4",
+      "position": [0.35, -0.18, -0.15],
+      "rotation": [1.5708, 0, 0.7854],
+      "innerDiameter": 0.6,
+      "outerDiameter": 0.8,
+      "wireGauge": 0.1,
+      "colorRole": "connector"
+    },
+    {
+      "id": "ring-5",
+      "position": [-0.35, -0.18, -0.15],
+      "rotation": [1.5708, 0, -0.7854],
+      "innerDiameter": 0.6,
+      "outerDiameter": 0.8,
+      "wireGauge": 0.1,
+      "colorRole": "connector"
+    }
+  ],
+  "steps": [
+    {
+      "stepNumber": 1,
+      "title": "Start with the Seed Ring",
+      "description": "Begin with a single closed ring. This will be the center ring that connects to 4 others. Hold it vertically with the opening facing away from you.",
+      "ringsToAdd": ["ring-1"],
+      "tips": [
+        "Use pre-closed rings for the seed ring",
+        "The ring should be positioned flat, laying horizontal"
+      ]
+    },
+    {
+      "stepNumber": 2,
+      "title": "Add First Connector Ring",
+      "description": "Thread an open ring through the seed ring from the front. This ring should lean to the upper-right at approximately 45 degrees. Close the ring after threading.",
+      "ringsToAdd": ["ring-2"],
+      "ringsToHighlight": ["ring-1"],
+      "tips": [
+        "The new ring passes through the center of the seed ring",
+        "Angle it at 45 degrees for proper weave structure"
+      ]
+    },
+    {
+      "stepNumber": 3,
+      "title": "Add Second Connector Ring",
+      "description": "Add another ring through the seed ring, leaning to the upper-left at 45 degrees. It should mirror the first connector on the opposite side.",
+      "ringsToAdd": ["ring-3"],
+      "ringsToHighlight": ["ring-1"],
+      "tips": [
+        "This ring mirrors the first connector",
+        "Both upper rings should be symmetric"
+      ]
+    },
+    {
+      "stepNumber": 4,
+      "title": "Add Third Connector Ring",
+      "description": "Thread a ring through the seed ring on the lower-right, mirroring the upper-right ring. This ring also angles at 45 degrees.",
+      "ringsToAdd": ["ring-4"],
+      "ringsToHighlight": ["ring-1", "ring-2"],
+      "tips": [
+        "The lower rings mirror the upper rings",
+        "Keep the 45-degree angle consistent"
+      ]
+    },
+    {
+      "stepNumber": 5,
+      "title": "Complete the 4-in-1 Unit",
+      "description": "Add the final connector ring on the lower-left. You now have the basic 4-in-1 unit: one center ring connected to exactly 4 others arranged symmetrically around it.",
+      "ringsToAdd": ["ring-5"],
+      "ringsToHighlight": ["ring-1"],
+      "tips": [
+        "This completes one 4-in-1 unit",
+        "To make a sheet, connect multiple units by their outer rings"
+      ]
+    }
+  ]
+}

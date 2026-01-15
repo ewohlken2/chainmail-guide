@@ -1,0 +1,11 @@
+{
+  "version": "1.0.0",
+  "tutorials": [
+    {
+      "id": "european-4-in-1",
+      "file": "european-4-in-1.json",
+      "name": "European 4-in-1",
+      "difficulty": "beginner"
+    }
+  ]
+}
