@@ -30,8 +30,14 @@ This is a data-driven 3D tutorial engine for chainmail weaves built with React, 
 - Step playback is managed by `useTutorialPlayer` hook
 - Ring visibility is determined by which step the user is on
 
+### Ring Open/Close Animation
+- Rings have a `startsOpen` property (boolean)
+- `startsOpen: false` - Ring appears closed (pre-made, like seed rings)
+- `startsOpen: true` - Ring appears open, animates into position, then closes
+- Animation sequence: scale in → close gap (mimics real chainmail assembly)
+
 ### Adding New Tutorials
 1. Create a new JSON file in `src/data/tutorials/` following the schema
 2. Add entry to `src/data/tutorials/index.json`
-3. Each ring needs: id, position, rotation, innerDiameter, outerDiameter, wireGauge, colorRole
+3. Each ring needs: id, position, rotation, innerDiameter, outerDiameter, wireGauge, colorRole, startsOpen
 4. Each step needs: stepNumber, title, description, ringsToAdd array

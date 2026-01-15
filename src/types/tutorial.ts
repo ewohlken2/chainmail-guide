@@ -6,6 +6,7 @@ export interface RingGeometry {
   outerDiameter: number;
   wireGauge: number;
   colorRole: string;
+  startsOpen?: boolean;
 }
 
 export interface TutorialStep {

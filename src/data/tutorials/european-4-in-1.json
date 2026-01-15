@@ -24,47 +24,52 @@
     {
       "id": "ring-1",
       "position": [0, 0, 0],
-      "rotation": [1.5708, 0, 0],
+      "rotation": [1.5708, 0, 0.7854],
       "innerDiameter": 0.6,
       "outerDiameter": 0.8,
       "wireGauge": 0.1,
-      "colorRole": "seed"
+      "colorRole": "seed",
+      "startsOpen": false
     },
     {
       "id": "ring-2",
-      "position": [0.35, 0.18, 0.15],
-      "rotation": [1.5708, 0, 0.7854],
+      "position": [0.28, 0.08, 0],
+      "rotation": [0.5236, 0, 0.7854],
       "innerDiameter": 0.6,
       "outerDiameter": 0.8,
       "wireGauge": 0.1,
-      "colorRole": "connector"
+      "colorRole": "connector",
+      "startsOpen": true
     },
     {
       "id": "ring-3",
-      "position": [-0.35, 0.18, 0.15],
-      "rotation": [1.5708, 0, -0.7854],
+      "position": [-0.28, 0.08, 0],
+      "rotation": [0.5236, 0, -0.7854],
       "innerDiameter": 0.6,
       "outerDiameter": 0.8,
       "wireGauge": 0.1,
-      "colorRole": "connector"
+      "colorRole": "connector",
+      "startsOpen": true
     },
     {
       "id": "ring-4",
-      "position": [0.35, -0.18, -0.15],
-      "rotation": [1.5708, 0, 0.7854],
+      "position": [0, -0.08, 0.28],
+      "rotation": [0.5236, 1.5708, 0],
       "innerDiameter": 0.6,
       "outerDiameter": 0.8,
       "wireGauge": 0.1,
-      "colorRole": "connector"
+      "colorRole": "connector",
+      "startsOpen": true
     },
     {
       "id": "ring-5",
-      "position": [-0.35, -0.18, -0.15],
-      "rotation": [1.5708, 0, -0.7854],
+      "position": [0, -0.08, -0.28],
+      "rotation": [-0.5236, 1.5708, 0],
       "innerDiameter": 0.6,
       "outerDiameter": 0.8,
       "wireGauge": 0.1,
-      "colorRole": "connector"
+      "colorRole": "connector",
+      "startsOpen": true
     }
   ],
   "steps": [
