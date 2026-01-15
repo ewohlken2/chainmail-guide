@@ -31,7 +31,6 @@ interface EditorPanelProps {
   onToggleVisibility: (id: string) => void;
   onHideOthers: (id: string) => void;
   onShowAll: () => void;
-  onInvertRotation: (id: string) => void;
   onUpdateStep: (stepNumber: number, updates: Partial<TutorialStep>) => void;
   onAddStep: () => void;
   onDeleteStep: (stepNumber: number) => void;
@@ -39,7 +38,7 @@ interface EditorPanelProps {
   onUpdateCamera: (camera: CameraConfig) => void;
   onUpdateScale: (scale: number) => void;
   onUpdateVersion: (version: string) => void;
-  onExport: () => void;
+  onSave: () => void;
 }
 
 type AccordionSection = "rings" | "steps" | "metadata" | "settings";
@@ -63,7 +62,6 @@ export function EditorPanel({
   onToggleVisibility,
   onHideOthers,
   onShowAll,
-  onInvertRotation,
   onUpdateStep,
   onAddStep,
   onDeleteStep,
@@ -71,7 +69,7 @@ export function EditorPanel({
   onUpdateCamera,
   onUpdateScale,
   onUpdateVersion,
-  onExport,
+  onSave,
 }: EditorPanelProps) {
   const hiddenCount = hiddenRingIds.size;
   const [openSections, setOpenSections] = useState<Set<AccordionSection>>(
@@ -111,10 +109,10 @@ export function EditorPanel({
         <h2>Editor</h2>
         <button
           className="export-btn"
-          onClick={onExport}
-          title="Export full JSON"
+          onClick={onSave}
+          title="Save tutorial JSON file"
         >
-          Export JSON
+          Save JSON
         </button>
       </div>
 
@@ -125,7 +123,7 @@ export function EditorPanel({
         onAddRing={onAddRing}
         onDeleteRing={() => selectedRing && onDeleteRing(selectedRing.id)}
         onDuplicateRing={() => selectedRing && onDuplicateRing(selectedRing.id)}
-        onExport={onExport}
+        onSave={onSave}
       />
 
       <div className="accordion-container">

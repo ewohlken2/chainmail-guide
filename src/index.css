@@ -1080,6 +1080,97 @@ body {
   font-style: italic;
 }
 
+/* Multi-Select Dropdown */
+.multi-select-container {
+  position: relative;
+  width: 100%;
+}
+
+.multi-select-trigger {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #0f3460;
+  border-radius: 0.5rem;
+  background: #1a1a2e;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.2s;
+  text-align: left;
+}
+
+.multi-select-trigger:hover {
+  border-color: #4169E1;
+}
+
+.multi-select-trigger:focus {
+  outline: none;
+  border-color: #e94560;
+}
+
+.multi-select-trigger .placeholder {
+  color: #555;
+}
+
+.multi-select-arrow {
+  color: #888;
+  font-size: 0.7rem;
+  margin-left: 0.5rem;
+  transition: transform 0.2s;
+}
+
+.multi-select-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 0.25rem;
+  background: #1a1a2e;
+  border: 1px solid #0f3460;
+  border-radius: 0.5rem;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.multi-select-option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  user-select: none;
+}
+
+.multi-select-option:hover {
+  background: #16213e;
+}
+
+.multi-select-option input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #4169E1;
+}
+
+.multi-select-option span {
+  color: #fff;
+  font-size: 0.9rem;
+  font-family: monospace;
+}
+
+.multi-select-empty {
+  padding: 1rem;
+  text-align: center;
+  color: #666;
+  font-size: 0.9rem;
+}
+
 /* Editor Section Header */
 .editor-section-header {
   display: flex;
@@ -1146,25 +1237,64 @@ body {
 }
 
 .step-editor-item {
-  padding: 1rem;
   background: #16213e;
   border: 1px solid #0f3460;
   border-radius: 0.5rem;
+  overflow: hidden;
 }
 
 .step-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1rem;
-  padding-bottom: 0.75rem;
+  padding: 1rem;
+  cursor: pointer;
+  background: #16213e;
+  transition: background 0.2s;
+  user-select: none;
   border-bottom: 1px solid #0f3460;
+}
+
+.step-header:hover {
+  background: #1a2a4e;
+}
+
+.step-header-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.step-accordion-icon {
+  color: #888;
+  font-size: 0.7rem;
+  transition: transform 0.2s;
+  width: 12px;
+  display: inline-block;
 }
 
 .step-number {
   font-size: 0.9rem;
   color: #4ecdc4;
   font-weight: 600;
+}
+
+.step-title-preview {
+  font-size: 0.85rem;
+  color: #aaa;
+  font-style: italic;
+}
+
+.step-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.step-content {
+  padding: 1rem;
+  background: #1a1a2e;
 }
 
 /* Metadata Editor */

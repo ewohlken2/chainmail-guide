@@ -10,6 +10,15 @@ interface UseTutorialIndexReturn {
   isLoading: boolean;
   error: Error | null;
   addTutorial: (name: string) => ChainmailTutorial;
+  saveTutorial: (
+    tutorial: ChainmailTutorial,
+    isNew: boolean,
+    existingHandle?: any
+  ) => Promise<any>;
+  updateIndexEntry: (
+    tutorialId: string,
+    updates: Partial<TutorialIndexEntry>
+  ) => void;
 }
 
 function toDashCase(str: string): string {
@@ -107,5 +116,101 @@ export function useTutorialIndex(): UseTutorialIndexReturn {
     return newTutorial;
   };
 
-  return { tutorials, isLoading, error, addTutorial };
+  const saveTutorial = async (
+    tutorial: ChainmailTutorial,
+    isNew: boolean,
+    existingHandle?: any
+  ): Promise<any> => {
+    const json = JSON.stringify(tutorial, null, 2);
+    const fileName = `${tutorial.metadata.id}.json`;
+
+    // Try to use File System Access API if available (Chrome/Edge)
+    // @ts-expect-error - File System Access API types not fully available
+    if (window.showSaveFilePicker) {
+      try {
+        let fileHandle = existingHandle;
+
+        // If we have an existing handle, use it; otherwise ask for a new one
+        if (!fileHandle) {
+          // @ts-expect-error - File System Access API
+          fileHandle = await window.showSaveFilePicker({
+            suggestedName: fileName,
+            types: [
+              {
+                description: "JSON files",
+                accept: { "application/json": [".json"] },
+              },
+            ],
+          });
+        }
+
+        const writable = await fileHandle.createWritable();
+        await writable.write(json);
+        await writable.close();
+        return fileHandle;
+      } catch (err) {
+        // User cancelled or error occurred, fall through to download
+        if ((err as any).name !== "AbortError") {
+          console.error("Error saving file:", err);
+        }
+        throw err;
+      }
+    }
+
+    // Fallback: Download the file
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    // If it's a new tutorial, also update the index
+    if (isNew) {
+      updateIndexEntry(tutorial.metadata.id, {
+        id: tutorial.metadata.id,
+        file: fileName,
+        name: tutorial.metadata.name,
+        difficulty: tutorial.metadata.difficulty,
+      });
+    }
+
+    return null;
+  };
+
+  const updateIndexEntry = (
+    tutorialId: string,
+    updates: Partial<TutorialIndexEntry>
+  ): void => {
+    setTutorials((prev) => {
+      const existing = prev.find((t) => t.id === tutorialId);
+      if (existing) {
+        // Update existing entry
+        return prev.map((t) =>
+          t.id === tutorialId ? { ...t, ...updates } : t
+        );
+      } else {
+        // Add new entry
+        const newEntry: TutorialIndexEntry = {
+          id: updates.id || tutorialId,
+          file: updates.file || `${tutorialId}.json`,
+          name: updates.name || tutorialId,
+          difficulty: updates.difficulty || "beginner",
+        };
+        return [...prev, newEntry];
+      }
+    });
+  };
+
+  return {
+    tutorials,
+    isLoading,
+    error,
+    addTutorial,
+    saveTutorial,
+    updateIndexEntry,
+  };
 }

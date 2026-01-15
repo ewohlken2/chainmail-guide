@@ -7,7 +7,7 @@ interface EditorToolbarProps {
   onAddRing: () => void;
   onDeleteRing: () => void;
   onDuplicateRing: () => void;
-  onExport: () => void;
+  onSave: () => void;
 }
 
 export function EditorToolbar({
@@ -17,7 +17,7 @@ export function EditorToolbar({
   onAddRing,
   onDeleteRing,
   onDuplicateRing,
-  onExport,
+  onSave,
 }: EditorToolbarProps) {
   return (
     <div className="editor-toolbar">
@@ -64,8 +64,8 @@ export function EditorToolbar({
       </div>
 
       <div className="toolbar-section">
-        <button className="toolbar-btn export" onClick={onExport} title="Copy JSON to clipboard">
-          Export JSON
+        <button className="toolbar-btn export" onClick={onSave} title="Save tutorial JSON file">
+          Save JSON
         </button>
       </div>
     </div>

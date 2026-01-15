@@ -9,7 +9,10 @@ import { useWeaveLoader } from "./hooks/useWeaveLoader";
 import { useTutorialPlayer } from "./hooks/useTutorialPlayer";
 import { useEditorState } from "./hooks/useEditorState";
 import { useTutorialIndex } from "./hooks/useTutorialIndex";
-import type { ChainmailTutorial } from "./types/tutorial";
+import type {
+  ChainmailTutorial,
+  TutorialIndex as TutorialIndexType,
+} from "./types/tutorial";
 import "./index.css";
 
 type AppView = "index" | "tutorial" | "editor";
@@ -22,11 +25,16 @@ function App() {
   const [customTutorial, setCustomTutorial] =
     useState<ChainmailTutorial | null>(null);
   const [showNewModal, setShowNewModal] = useState(false);
+  // Store file handles for automatic saving
+  const [tutorialFileHandle, setTutorialFileHandle] = useState<any>(null);
+  const [indexFileHandle, setIndexFileHandle] = useState<any>(null);
 
   const {
     tutorials,
     isLoading: indexLoading,
     addTutorial,
+    saveTutorial,
+    updateIndexEntry,
   } = useTutorialIndex();
   const {
     tutorial: loadedTutorial,
@@ -47,6 +55,9 @@ function App() {
     setCustomTutorial(null);
     setSelectedTutorialId(id);
     setView("tutorial");
+    // Clear file handles when switching tutorials
+    setTutorialFileHandle(null);
+    setIndexFileHandle(null);
   };
 
   const handleCreateNew = (name: string) => {
@@ -55,25 +66,194 @@ function App() {
     setSelectedTutorialId(null);
     setShowNewModal(false);
     setView("editor");
+    // Clear file handles for new tutorial
+    setTutorialFileHandle(null);
+    setIndexFileHandle(null);
   };
 
   const handleBackToIndex = () => {
     setView("index");
     setSelectedTutorialId(null);
     setCustomTutorial(null);
+    // Clear file handles when going back
+    setTutorialFileHandle(null);
+    setIndexFileHandle(null);
   };
 
-  const handleExport = () => {
-    const json = editor.exportJSON();
-    navigator.clipboard
-      .writeText(json)
-      .then(() => {
-        alert("Tutorial JSON copied to clipboard!");
-      })
-      .catch(() => {
-        console.log("Tutorial JSON:\n", json);
-        alert("Check console for tutorial JSON (clipboard not available)");
-      });
+  const handleSave = async () => {
+    const tutorialData: ChainmailTutorial = {
+      version: editor.version,
+      metadata: editor.metadata,
+      defaultCamera: editor.defaultCamera,
+      scale: editor.scale,
+      rings: editor.rings,
+      steps: editor.steps,
+    };
+
+    // Check if this is a new tutorial (customTutorial with no selectedTutorialId)
+    const isNew = customTutorial !== null && selectedTutorialId === null;
+
+    // Check if we need to overwrite existing files
+    const willOverwriteTutorial = tutorialFileHandle !== null || !isNew;
+    const willOverwriteIndex = indexFileHandle !== null || isNew;
+
+    // Show confirmation if files will be overwritten
+    if (willOverwriteTutorial || willOverwriteIndex) {
+      const filesToOverwrite: string[] = [];
+      if (willOverwriteTutorial) {
+        filesToOverwrite.push(`${tutorialData.metadata.id}.json`);
+      }
+      if (willOverwriteIndex) {
+        filesToOverwrite.push("index.json");
+      }
+
+      const confirmed = window.confirm(
+        `This will overwrite the following file(s):\n\n${filesToOverwrite.join(
+          "\n"
+        )}\n\nDo you want to continue?`
+      );
+
+      if (!confirmed) {
+        return;
+      }
+    }
+
+    try {
+      // Prepare index data
+      let indexData: TutorialIndexType;
+      if (!isNew && selectedTutorialId) {
+        const existingTutorial = tutorials.find(
+          (t) => t.id === selectedTutorialId
+        );
+        if (existingTutorial) {
+          const metadataChanged =
+            existingTutorial.name !== tutorialData.metadata.name ||
+            existingTutorial.difficulty !== tutorialData.metadata.difficulty;
+
+          if (metadataChanged) {
+            updateIndexEntry(selectedTutorialId, {
+              name: tutorialData.metadata.name,
+              difficulty: tutorialData.metadata.difficulty,
+            });
+          }
+
+          indexData = {
+            version: "1.0.0",
+            tutorials: tutorials.map((t) =>
+              t.id === selectedTutorialId
+                ? {
+                    ...t,
+                    name: tutorialData.metadata.name,
+                    difficulty: tutorialData.metadata.difficulty,
+                  }
+                : t
+            ),
+          };
+        } else {
+          indexData = {
+            version: "1.0.0",
+            tutorials: tutorials,
+          };
+        }
+      } else if (isNew) {
+        // For new tutorials, add to index
+        updateIndexEntry(tutorialData.metadata.id, {
+          id: tutorialData.metadata.id,
+          file: `${tutorialData.metadata.id}.json`,
+          name: tutorialData.metadata.name,
+          difficulty: tutorialData.metadata.difficulty,
+        });
+        indexData = {
+          version: "1.0.0",
+          tutorials: [
+            ...tutorials,
+            {
+              id: tutorialData.metadata.id,
+              file: `${tutorialData.metadata.id}.json`,
+              name: tutorialData.metadata.name,
+              difficulty: tutorialData.metadata.difficulty,
+            },
+          ],
+        };
+      } else {
+        indexData = {
+          version: "1.0.0",
+          tutorials: tutorials,
+        };
+      }
+
+      // Save both files
+      const newTutorialHandle = await saveTutorial(
+        tutorialData,
+        isNew,
+        tutorialFileHandle
+      );
+      const newIndexHandle = await saveIndexFile(indexData, indexFileHandle);
+
+      // Store file handles for next save
+      if (newTutorialHandle) {
+        setTutorialFileHandle(newTutorialHandle);
+      }
+      if (newIndexHandle) {
+        setIndexFileHandle(newIndexHandle);
+      }
+
+      alert("Tutorial saved successfully!");
+    } catch (error) {
+      console.error("Error saving tutorial:", error);
+      alert("Failed to save tutorial. Check the console for details.");
+    }
+  };
+
+  const saveIndexFile = async (
+    indexData: TutorialIndexType,
+    existingHandle?: any
+  ): Promise<any> => {
+    const json = JSON.stringify(indexData, null, 2);
+
+    // Try File System Access API
+    // @ts-expect-error - File System Access API types not fully available
+    if (window.showSaveFilePicker) {
+      try {
+        let fileHandle = existingHandle;
+
+        // If we have an existing handle, use it; otherwise ask for a new one
+        if (!fileHandle) {
+          // @ts-expect-error - File System Access API
+          fileHandle = await window.showSaveFilePicker({
+            suggestedName: "index.json",
+            types: [
+              {
+                description: "JSON files",
+                accept: { "application/json": [".json"] },
+              },
+            ],
+          });
+        }
+
+        const writable = await fileHandle.createWritable();
+        await writable.write(json);
+        await writable.close();
+        return fileHandle;
+      } catch (err) {
+        if ((err as any).name !== "AbortError") {
+          console.error("Error saving index file:", err);
+        }
+        throw err;
+      }
+    }
+
+    // Fallback: Download
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "index.json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    return null;
   };
 
   // Index view
@@ -222,7 +402,6 @@ function App() {
               onToggleVisibility={editor.toggleRingVisibility}
               onHideOthers={editor.hideOtherRings}
               onShowAll={editor.showAllRings}
-              onInvertRotation={editor.invertRingRotation}
               onUpdateStep={editor.updateStep}
               onAddStep={editor.addStep}
               onDeleteStep={editor.deleteStep}
@@ -230,7 +409,7 @@ function App() {
               onUpdateCamera={editor.setDefaultCamera}
               onUpdateScale={editor.setScale}
               onUpdateVersion={editor.setVersion}
-              onExport={handleExport}
+              onSave={handleSave}
             />
           </>
         )}
