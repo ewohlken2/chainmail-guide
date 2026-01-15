@@ -86,10 +86,56 @@ const DEFAULT_RING: Omit<RingGeometry, "id"> = {
   startsOpen: true,
 };
 
-let ringCounter = 1;
+// Helper to renumber rings sequentially and update all references
+function renumberRings(
+  rings: RingGeometry[],
+  steps: TutorialStep[],
+  selectedRingId: string | null,
+  hiddenRingIds: Set<string>
+): {
+  rings: RingGeometry[];
+  steps: TutorialStep[];
+  selectedRingId: string | null;
+  hiddenRingIds: Set<string>;
+} {
+  // Create a mapping from old IDs to new IDs
+  const idMap = new Map<string, string>();
+  rings.forEach((ring, index) => {
+    const newId = `ring-${index + 1}`;
+    idMap.set(ring.id, newId);
+  });
 
-function generateRingId(): string {
-  return `ring-${++ringCounter}`;
+  // Renumber rings
+  const newRings = rings.map((ring, index) => ({
+    ...ring,
+    id: `ring-${index + 1}`,
+  }));
+
+  // Update step references
+  const newSteps = steps.map((step) => ({
+    ...step,
+    ringsToAdd: step.ringsToAdd.map((id) => idMap.get(id) ?? id),
+    ringsToHighlight: step.ringsToHighlight?.map((id) => idMap.get(id) ?? id),
+  }));
+
+  // Update selected ring ID
+  const newSelectedRingId = selectedRingId ? idMap.get(selectedRingId) ?? null : null;
+
+  // Update hidden ring IDs
+  const newHiddenRingIds = new Set<string>();
+  hiddenRingIds.forEach((id) => {
+    const newId = idMap.get(id);
+    if (newId) {
+      newHiddenRingIds.add(newId);
+    }
+  });
+
+  return {
+    rings: newRings,
+    steps: newSteps,
+    selectedRingId: newSelectedRingId,
+    hiddenRingIds: newHiddenRingIds,
+  };
 }
 
 function generateStepsFromRings(rings: RingGeometry[]): TutorialStep[] {
@@ -230,13 +276,6 @@ export function useEditorState(
       // Update undo/redo state in the initial state
       // State is already initialized with canUndo: false, canRedo: false which is correct for initial state
 
-      // Update counter to avoid ID collisions
-      const maxId = initialRings.reduce((max, ring) => {
-        const match = ring.id.match(/ring-(\d+)/);
-        return match ? Math.max(max, parseInt(match[1], 10)) : max;
-      }, 0);
-      ringCounter = maxId;
-
       return; // State is already initialized correctly in useState
     }
 
@@ -260,13 +299,6 @@ export function useEditorState(
       scale: baseTutorial?.scale ?? 1.0,
       version: baseTutorial?.version ?? "1.0.0",
     }));
-
-    // Update counter to avoid ID collisions
-    const maxId = initialRings.reduce((max, ring) => {
-      const match = ring.id.match(/ring-(\d+)/);
-      return match ? Math.max(max, parseInt(match[1], 10)) : max;
-    }, 0);
-    ringCounter = maxId;
 
     // Reset history when tutorial changes
     historyRef.current = [JSON.parse(JSON.stringify(initialRings))];
@@ -328,9 +360,10 @@ export function useEditorState(
 
   const addRing = useCallback(() => {
     setState((s) => {
+      const newId = `ring-${s.rings.length + 1}`;
       const newRing: RingGeometry = {
         ...DEFAULT_RING,
-        id: generateRingId(),
+        id: newId,
         position: [0, 0.5, 0], // Slightly above origin
       };
       const newRings = [...s.rings, newRing];
@@ -349,9 +382,10 @@ export function useEditorState(
         const ringToDuplicate = s.rings.find((r) => r.id === id);
         if (!ringToDuplicate) return s;
 
+        const newId = `ring-${s.rings.length + 1}`;
         const newRing: RingGeometry = {
           ...ringToDuplicate,
-          id: generateRingId(),
+          id: newId,
           position: [
             ringToDuplicate.position[0] + 0.3,
             ringToDuplicate.position[1],
@@ -373,12 +407,21 @@ export function useEditorState(
   const deleteRing = useCallback(
     (id: string) => {
       setState((s) => {
-        const newRings = s.rings.filter((ring) => ring.id !== id);
-        saveToHistory(newRings);
+        const filteredRings = s.rings.filter((ring) => ring.id !== id);
+        // Renumber remaining rings and update all references
+        const renumbered = renumberRings(
+          filteredRings,
+          s.steps,
+          s.selectedRingId === id ? null : s.selectedRingId,
+          s.hiddenRingIds
+        );
+        saveToHistory(renumbered.rings);
         return {
           ...s,
-          rings: newRings,
-          selectedRingId: s.selectedRingId === id ? null : s.selectedRingId,
+          rings: renumbered.rings,
+          steps: renumbered.steps,
+          selectedRingId: renumbered.selectedRingId,
+          hiddenRingIds: renumbered.hiddenRingIds,
         };
       });
     },
