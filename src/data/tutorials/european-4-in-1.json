@@ -33,8 +33,8 @@
     },
     {
       "id": "ring-2",
-      "position": [0.28, 0.08, 0],
-      "rotation": [0.5236, 0, 0.7854],
+      "position": [0.448, 0.033, -0.243],
+      "rotation": [2.025, -0.039, 3.127],
       "innerDiameter": 0.6,
       "outerDiameter": 0.8,
       "wireGauge": 0.1,
@@ -43,8 +43,8 @@
     },
     {
       "id": "ring-3",
-      "position": [-0.28, 0.08, 0],
-      "rotation": [0.5236, 0, -0.7854],
+      "position": [-0.482, 0.089, 0.237],
+      "rotation": [1.057, -0.068, -0.785],
       "innerDiameter": 0.6,
       "outerDiameter": 0.8,
       "wireGauge": 0.1,
@@ -53,8 +53,8 @@
     },
     {
       "id": "ring-4",
-      "position": [0, -0.08, 0.28],
-      "rotation": [0.5236, 1.5708, 0],
+      "position": [0.302, 0.04, 0.456],
+      "rotation": [-2.092, 0.401, 2.214],
       "innerDiameter": 0.6,
       "outerDiameter": 0.8,
       "wireGauge": 0.1,
@@ -63,8 +63,8 @@
     },
     {
       "id": "ring-5",
-      "position": [0, -0.08, -0.28],
-      "rotation": [-0.5236, 1.5708, 0],
+      "position": [-0.288, 0.082, -0.463],
+      "rotation": [-1.182, -0.185, -1.238],
       "innerDiameter": 0.6,
       "outerDiameter": 0.8,
       "wireGauge": 0.1,

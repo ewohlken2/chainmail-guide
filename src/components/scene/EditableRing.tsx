@@ -1,4 +1,4 @@
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, useEffect } from 'react';
 import { ThreeEvent } from '@react-three/fiber';
 import * as THREE from 'three';
 import type { RingGeometry } from '@/types/tutorial';
@@ -19,6 +19,16 @@ export function EditableRing({ ring, isSelected, onSelect, scale = 1 }: Editable
   const innerRadius = (ring.innerDiameter / 2) * scale;
   const outerRadius = (ring.outerDiameter / 2) * scale;
   const ringRadius = (innerRadius + outerRadius) / 2;
+
+  // Sync mesh rotation when ring.rotation changes (important when TransformControls is attached)
+  // We depend on individual values to ensure the effect runs even if the array reference doesn't change
+  useEffect(() => {
+    if (meshRef.current) {
+      meshRef.current.rotation.set(ring.rotation[0], ring.rotation[1], ring.rotation[2]);
+      // Force update the rotation order to ensure it's applied correctly
+      meshRef.current.rotation.order = 'XYZ';
+    }
+  }, [ring.rotation[0], ring.rotation[1], ring.rotation[2]]);
 
   // Create material based on selection state
   const material = useMemo(() => {

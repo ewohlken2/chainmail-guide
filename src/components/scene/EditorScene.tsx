@@ -12,7 +12,7 @@ interface EditorSceneProps {
   selectedRingId: string | null;
   transformMode: TransformMode;
   onSelectRing: (id: string | null) => void;
-  onTransformChange: (id: string, position: [number, number, number], rotation: [number, number, number]) => void;
+  onTransformChange: (id: string, position: [number, number, number], rotation: [number, number, number], skipHistory?: boolean) => void;
 }
 
 // Inner component that has access to Three.js context
@@ -39,12 +39,21 @@ function EditorContent({
     forceUpdate(n => n + 1);
   }, [selectedRingId, scene, rings]);
 
-  // Handle transform changes
-  const handleTransformChange = () => {
+  // Handle transform changes during drag (skip history)
+  const handleTransformChangeDuringDrag = () => {
+    if (selectedMeshRef.current && selectedRingId && isDragging) {
+      const position = selectedMeshRef.current.position.toArray() as [number, number, number];
+      const rotation = selectedMeshRef.current.rotation.toArray().slice(0, 3) as [number, number, number];
+      onTransformChange(selectedRingId, position, rotation, true); // skipHistory = true
+    }
+  };
+
+  // Handle transform changes when drag ends (save to history)
+  const handleTransformChangeEnd = () => {
     if (selectedMeshRef.current && selectedRingId) {
       const position = selectedMeshRef.current.position.toArray() as [number, number, number];
       const rotation = selectedMeshRef.current.rotation.toArray().slice(0, 3) as [number, number, number];
-      onTransformChange(selectedRingId, position, rotation);
+      onTransformChange(selectedRingId, position, rotation, false); // skipHistory = false (save to history)
     }
   };
 
@@ -89,12 +98,14 @@ function EditorContent({
           object={selectedMeshRef.current}
           mode={transformMode}
           size={0.7}
-          onMouseDown={() => setIsDragging(true)}
+          onMouseDown={() => {
+            setIsDragging(true);
+          }}
           onMouseUp={() => {
             setIsDragging(false);
-            handleTransformChange();
+            handleTransformChangeEnd(); // Save to history when drag ends
           }}
-          onChange={handleTransformChange}
+          onChange={handleTransformChangeDuringDrag} // Update during drag without saving history
         />
       )}
 

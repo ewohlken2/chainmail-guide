@@ -1,0 +1,97 @@
+{
+  "version": "1.0.0",
+  "metadata": {
+    "id": "half-persian-3-in-1",
+    "name": "Half Persian 3 in 1",
+    "difficulty": "beginner",
+    "description": "A custom chainmail weave: Half Persian 3 in 1",
+    "tags": ["custom"]
+  },
+  "defaultCamera": {
+    "position": [0, 3, 6],
+    "target": [0, 0, 0],
+    "fov": 50
+  },
+  "scale": 1,
+  "rings": [
+    {
+      "id": "ring-1",
+      "position": [0, 0, 0],
+      "rotation": [1.5708, 0, 0.7854],
+      "innerDiameter": 0.6,
+      "outerDiameter": 0.8,
+      "wireGauge": 0.1,
+      "colorRole": "seed",
+      "startsOpen": false
+    },
+    {
+      "id": "ring-3",
+      "position": [
+        0.007733760030464498, 0.10839814846955015, -0.2858261573208685
+      ],
+      "rotation": [1.5708, 0, 0.7854],
+      "innerDiameter": 0.6,
+      "outerDiameter": 0.8,
+      "wireGauge": 0.1,
+      "colorRole": "connector",
+      "startsOpen": false
+    },
+    {
+      "id": "ring-7",
+      "position": [
+        -0.007297600807259396, -0.12877594811451262, 0.3561918330764123
+      ],
+      "rotation": [1.5708, 0, 0.7854],
+      "innerDiameter": 0.6,
+      "outerDiameter": 0.8,
+      "wireGauge": 0.1,
+      "colorRole": "connector",
+      "startsOpen": false
+    },
+    {
+      "position": [
+        -0.07835154053244386, -0.02715885753941125, 0.12208441001120893
+      ],
+      "rotation": [2.092504920560482, -0.6130246340133728, 1.6733610346336774],
+      "innerDiameter": 0.6,
+      "outerDiameter": 0.8,
+      "wireGauge": 0.1,
+      "colorRole": "connector",
+      "startsOpen": true,
+      "id": "ring-9"
+    },
+    {
+      "id": "ring-11",
+      "position": [
+        -0.04514431462652533, -0.23625066012385648, 0.7832052912485393
+      ],
+      "rotation": [1.5708, 0, 0.7854],
+      "innerDiameter": 0.6,
+      "outerDiameter": 0.8,
+      "wireGauge": 0.1,
+      "colorRole": "connector",
+      "startsOpen": false
+    },
+    {
+      "position": [
+        -0.05557082530619055, -0.09233062011210884, 0.4957147694406077
+      ],
+      "rotation": [2.092504920560482, -0.6130246340133728, 1.6733610346336774],
+      "innerDiameter": 0.6,
+      "outerDiameter": 0.8,
+      "wireGauge": 0.1,
+      "colorRole": "connector",
+      "startsOpen": true,
+      "id": "ring-15"
+    }
+  ],
+  "steps": [
+    {
+      "stepNumber": 1,
+      "title": "Start with the Seed Ring",
+      "description": "Begin with a single closed ring. This will be the foundation of your weave.",
+      "ringsToAdd": ["ring-1"],
+      "tips": ["This is the starting ring of your custom weave"]
+    }
+  ]
+}

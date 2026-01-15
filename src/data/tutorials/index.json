@@ -6,6 +6,12 @@
       "file": "european-4-in-1.json",
       "name": "European 4-in-1",
       "difficulty": "beginner"
+    },
+    {
+      "id": "half-persian-3-in-1",
+      "file": "half-persian-3-in-1.json",
+      "name": "Half Persian 3-in-1",
+      "difficulty": "intermediate"
     }
   ]
 }
